@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nerest • Digital download</title>
+  <style>
+    :root{
+      --bg0:#070b12;
+      --bg1:#0a1220;
+      --card:#0c1424cc;
+      --card2:#0b1322a8;
+      --stroke:rgba(255,255,255,.08);
+      --stroke2:rgba(255,255,255,.12);
+      --text:#e7edf6;
+      --muted:#98a7bd;
+      --muted2:#7f90aa;
+      --chip:rgba(255,255,255,.06);
+
+      --cyan: #58d5ff;
+      --mint: #58ffb7;
+      --blue: #6aa7ff;
+      --accent: #67d5ff;
+
+      --r16:16px;
+      --r20:20px;
+      --r24:24px;
+
+      --shadow: 0 20px 70px rgba(0,0,0,.55);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% -10%, rgba(88,213,255,.22), transparent 60%),
+        radial-gradient(900px 600px at 85% 10%, rgba(88,255,183,.12), transparent 58%),
+        radial-gradient(700px 600px at 60% 110%, rgba(106,167,255,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+      overflow-x:hidden;
+    }
+
+    .wrap{max-width:1180px; margin:0 auto; padding:22px 16px 70px}
+    .glass{
+      background: linear-gradient(180deg, rgba(15,24,40,.78), rgba(10,16,28,.56));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* topbar */
+    .topbar{
+      border-radius: 22px;
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; min-width:220px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:16px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.65));
+      box-shadow: 0 16px 40px rgba(88,213,255,.18);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .brand .t1{font-weight:700; line-height:1.1}
+    .brand .t2{font-size:12px;color:var(--muted); margin-top:2px}
+
+    .nav{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center;
+      padding:6px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .tab{
+      appearance:none; border:0; cursor:pointer;
+      padding:10px 14px;
+      border-radius: 14px;
+      font-weight:600;
+      color: rgba(231,237,246,.8);
+      background: transparent;
+      transition:.18s ease;
+    }
+    .tab:hover{background: rgba(255,255,255,.06)}
+    .tab.active{
+      color:#07121d;
+      background: linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.55));
+      box-shadow: 0 14px 40px rgba(88,213,255,.18);
+    }
+
+    .actions{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; min-width:260px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight:700;
+      cursor:pointer;
+      transition:.18s ease;
+      user-select:none;
+      text-decoration:none;
+    }
+    .btn:hover{transform: translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .btn.primary{
+      border-color: transparent;
+      color:#06111c;
+      background: linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.60));
+      box-shadow: 0 18px 60px rgba(88,213,255,.18);
+    }
+    .btn.ghost{
+      color: rgba(231,237,246,.9);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* layout */
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .brand{min-width:auto}
+      .actions{min-width:auto}
+    }
+
+    .card{
+      border-radius: var(--r24);
+      padding:18px 18px;
+    }
+
+    .hero-title{
+      font-size:44px;
+      line-height:1.06;
+      margin:0 0 10px;
+      letter-spacing:-.02em;
+    }
+    @media (max-width: 560px){ .hero-title{font-size:34px} }
+
+    .hero-sub{
+      margin:0 0 14px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+      max-width: 62ch;
+    }
+
+    .chips{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 14px}
+    .chip{
+      padding:8px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      border:1px solid rgba(255,255,255,.06);
+      color: rgba(231,237,246,.78);
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .warn{
+      margin-top:14px;
+      padding:12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,214,102,.22);
+      background: rgba(255,214,102,.08);
+      color: rgba(255,235,190,.92);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .mini-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (max-width: 560px){ .mini-row{grid-template-columns:1fr} }
+
+    .mini{
+      border-radius: 16px;
+      padding:12px 12px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+    }
+    .mini b{display:block; font-size:14px}
+    .mini span{display:block; margin-top:3px; color:var(--muted); font-size:12px}
+
+    /* quick buttons */
+    .side-title{
+      font-weight:800;
+      margin:2px 0 12px;
+      color: rgba(231,237,246,.9);
+    }
+    .qbox{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      padding:12px;
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      margin-top:5px;
+      background: linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.65));
+      box-shadow: 0 10px 25px rgba(88,213,255,.18);
+      flex:0 0 auto;
+    }
+    .qbox b{display:block; font-size:14px}
+    .qbox span{display:block; margin-top:3px; color:var(--muted); font-size:12px; line-height:1.35}
+    .qstack{display:flex; flex-direction:column; gap:10px; margin:10px 0 14px}
+    .side-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .btn.sm{padding:10px 12px; border-radius: 14px; font-size:13px}
+
+    /* bottom cards */
+    .bottom{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){ .bottom{grid-template-columns:1fr} }
+
+    .section-title{
+      display:flex; align-items:center; gap:10px;
+      margin:0 0 8px;
+      font-weight:900;
+    }
+    .section-sub{margin:0 0 14px; color:var(--muted); font-size:13px}
+
+    .price-row{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 14px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      margin-top:10px;
+    }
+    .price-row .left b{display:block; font-size:18px}
+    .price-row .left span{display:block; font-size:12px; color:var(--muted); margin-top:3px}
+    .price-row .right .buy{
+      padding:10px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex; align-items:center; justify-content:center;
+    }
+    .price-row .right .buy:hover{transform: translateY(-1px); border-color:rgba(255,255,255,.18)}
+    .buy.primary{
+      border-color: transparent;
+      color:#06111c;
+      background: linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.55));
+    }
+
+    .bullets{margin:10px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px}
+    .bullet{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      color: rgba(231,237,246,.88);
+      font-size:13px;
+    }
+    .bullet .bdot{
+      width:10px;height:10px;border-radius:999px; margin-top:5px;
+      background: linear-gradient(135deg, rgba(88,213,255,.95), rgba(88,255,183,.65));
+      flex:0 0 auto;
+    }
+    .muted{color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+
+    /* tab panels */
+    .panel{display:none}
+    .panel.active{display:block}
+
+    /* toast */
+    .toast{
+      position:fixed;
+      left:50%; bottom:22px;
+      transform:translateX(-50%);
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,18,30,.78);
+      color: rgba(231,237,246,.92);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      opacity:0; pointer-events:none;
+      transition:.2s ease;
+      font-weight:700;
+      font-size:13px;
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(-2px)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- TOP BAR -->
+    <div class="topbar glass">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="t1">Nerest</div>
+          <div class="t2">Digital download • Подписки</div>
+        </div>
+      </div>
+
+      <div class="nav" role="tablist" aria-label="Навигация">
+        <button class="tab active" data-tab="home" role="tab" aria-selected="true">Главная</button>
+        <button class="tab" data-tab="pc" role="tab" aria-selected="false">ПК</button>
+        <button class="tab" data-tab="phone" role="tab" aria-selected="false">Телефон</button>
+        <button class="tab" data-tab="features" role="tab" aria-selected="false">Функции</button>
+        <button class="tab" data-tab="faq" role="tab" aria-selected="false">FAQ</button>
+      </div>
+
+      <div class="actions">
+        <button class="btn ghost" id="copyBtn">Скопировать @</button>
+        <a class="btn primary" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Купить</a>
+      </div>
+    </div>
+
+    <!-- PANELS -->
+    <div id="home" class="panel active">
+      <div class="grid">
+
+        <!-- HERO LEFT -->
+        <div class="card glass">
+          <h1 class="hero-title">Бесплатно на ПК<br/>и подписка на телефон</h1>
+          <p class="hero-sub">
+            Красивый сайт с вкладками: загрузка, тарифы, функции и FAQ.
+            Тексты можешь заменить под <span class="muted">легальный цифровой продукт</span> (утилита/оверлей/гайд/конфиги и т.п.).
+          </p>
+
+          <div class="chips">
+            <div class="chip">Вкладки без перезагрузки</div>
+            <div class="chip">Модалка покупки</div>
+            <div class="chip">Копирование контакта</div>
+            <div class="chip">Работает как статический сайт</div>
+          </div>
+
+          <div class="warn">
+            ⚠️ Я не добавляю на сайт описания/функции, которые связаны с читами/взломом или вредом другим игрокам.
+            Но структура и дизайн — полностью готовы.
+          </div>
+
+          <div class="mini-row">
+            <div class="mini">
+              <b>ПК: бесплатно</b>
+              <span>Загрузка через Telegram</span>
+            </div>
+            <div class="mini">
+              <b>Телефон: подписка</b>
+              <span>Покупка через <span class="mono">@taKT1k_ofc</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- HERO RIGHT -->
+        <div class="card glass">
+          <div class="side-title">Быстрые кнопки</div>
+          <div class="qstack">
+            <a class="qbox" href="https://t.me/nerestfilespc" target="_blank" rel="noopener">
+              <div class="dot" aria-hidden="true"></div>
+              <div>
+                <b>Скачать для ПК</b>
+                <span>Откроет Telegram-канал</span>
+              </div>
+            </a>
+            <a class="qbox" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">
+              <div class="dot" aria-hidden="true"></div>
+              <div>
+                <b>Купить для телефона</b>
+                <span>Откроет чат с продавцом</span>
+              </div>
+            </a>
+            <button class="qbox" type="button" id="goFeatures">
+              <div class="dot" aria-hidden="true"></div>
+              <div>
+                <b>Смотреть функции</b>
+                <span>Отдельная вкладка</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="side-actions">
+            <a class="btn primary sm" href="https://t.me/nerestfilespc" target="_blank" rel="noopener">Скачать ПК</a>
+            <a class="btn ghost sm" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Написать</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM -->
+      <div class="bottom">
+
+        <!-- PC CARD -->
+        <div class="card glass">
+          <div class="section-title">💻 ПК — бесплатно</div>
+          <p class="section-sub">Загрузка через Telegram-канал.</p>
+
+          <div class="price-row">
+            <div class="left">
+              <b>0 ₽</b>
+              <span>Доступ сразу</span>
+            </div>
+            <div class="right">
+              <a class="buy primary" href="https://t.me/nerestfilespc" target="_blank" rel="noopener">Перейти к скачиванию</a>
+            </div>
+          </div>
+
+          <ul class="bullets">
+            <li class="bullet"><span class="bdot"></span><span><b>Быстрая установка</b> <span class="muted">(добавь свою инструкцию)</span></span></li>
+            <li class="bullet"><span class="bdot"></span><span><b>Минималистичный интерфейс</b></span></li>
+            <li class="bullet"><span class="bdot"></span><span><b>Обновления</b> <span class="muted">(если есть)</span></span></li>
+          </ul>
+        </div>
+
+        <!-- PHONE CARD -->
+        <div class="card glass">
+          <div class="section-title">📱 Телефон — подписка</div>
+          <p class="section-sub">Тарифы: 7 дней / 1 месяц / 3 месяца. Покупка через <span class="mono">@taKT1k_ofc</span>.</p>
+
+          <div class="price-row">
+            <div class="left">
+              <b>300 ₽</b>
+              <span>7 дней</span>
+            </div>
+            <div class="right">
+              <a class="buy primary" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Купить</a>
+            </div>
+          </div>
+
+          <div class="price-row">
+            <div class="left">
+              <b>600 ₽</b>
+              <span>1 месяц</span>
+            </div>
+            <div class="right">
+              <a class="buy primary" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Купить</a>
+            </div>
+          </div>
+
+          <div class="price-row">
+            <div class="left">
+              <b>1300 ₽</b>
+              <span>3 месяца</span>
+            </div>
+            <div class="right">
+              <a class="buy primary" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Купить</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ПК -->
+    <div id="pc" class="panel">
+      <div class="card glass">
+        <h2 style="margin:0 0 8px; font-size:22px;">ПК — загрузка</h2>
+        <p class="hero-sub" style="max-width:none">
+          Ссылка на файл/канал:
+          <a class="btn ghost sm" style="margin-left:10px" href="https://t.me/nerestfilespc" target="_blank" rel="noopener">Открыть</a>
+        </p>
+        <div class="mini" style="margin-top:10px">
+          <b>ПК: бесплатно</b>
+          <span>Загрузка через <span class="mono">https://t.me/nerestfilespc</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Телефон -->
+    <div id="phone" class="panel">
+      <div class="card glass">
+        <h2 style="margin:0 0 8px; font-size:22px;">Телефон — покупка</h2>
+        <p class="hero-sub" style="max-width:none">
+          Контакт для покупки:
+          <span class="mono">@taKT1k_ofc</span>
+          <a class="btn primary sm" style="margin-left:10px" href="https://t.me/taKT1k_ofc" target="_blank" rel="noopener">Написать</a>
+        </p>
+
+        <div class="bottom" style="margin-top:10px">
+          <div class="mini">
+            <b>Неделя</b><span>300 ₽</span>
+          </div>
+          <div class="mini">
+            <b>Месяц</b><span>600 ₽</span>
+          </div>
+          <div class="mini" style="grid-column:1 / -1">
+            <b>3 месяца</b><span>1300 ₽</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Функции (легальные) -->
+    <div id="features" class="panel">
+      <div class="card glass">
+        <h2 style="margin:0 0 8px; font-size:22px;">Функции</h2>
+        <p class="hero-sub" style="max-width:none">
+          Здесь добавь список <span class="muted">легальных</span> возможностей (например: гайды/конфиги/оверлей без читов/настройки/обучение).
+        </p>
+
+        <div class="bottom" style="margin-top:10px">
+          <div class="mini">
+            <b>ПК пакет</b>
+            <span>Пункты/модули/материалы</span>
+          </div>
+          <div class="mini">
+            <b>Телефон пакет</b>
+            <span>Пункты/модули/материалы</span>
+          </div>
+        </div>
+
+        <ul class="bullets" style="margin-top:12px">
+          <li class="bullet"><span class="bdot"></span><span>Инструкции по установке и запуску</span></li>
+          <li class="bullet"><span class="bdot"></span><span>Настройки чувствительности / раскладки</span></li>
+          <li class="bullet"><span class="bdot"></span><span>Разбор карт, позиции, тактики</span></li>
+          <li class="bullet"><span class="bdot"></span><span>Обновления материалов (если есть)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div id="faq" class="panel">
+      <div class="card glass">
+        <h2 style="margin:0 0 8px; font-size:22px;">FAQ</h2>
+        <ul class="bullets">
+          <li class="bullet"><span class="bdot"></span><span><b>Как скачать ПК?</b><br><span class="muted">Нажми “Скачать для ПК” — откроется Telegram-канал.</span></span></li>
+          <li class="bullet"><span class="bdot"></span><span><b>Как купить подписку?</b><br><span class="muted">Нажми “Купить” или напиши <span class="mono">@taKT1k_ofc</span>.</span></span></li>
+          <li class="bullet"><span class="bdot"></span><span><b>Можно ли изменить тексты?</b><br><span class="muted">Да, всё в одном файле — меняй заголовки/описания/списки.</span></span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">Скопировано: @taKT1k_ofc</div>
+
+  <script>
+    const USERNAME = "@taKT1k_ofc";
+
+    // Tabs
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".panel");
+
+    function openTab(id){
+      tabs.forEach(t=>{
+        const on = t.dataset.tab === id;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      panels.forEach(p=>p.classList.toggle("active", p.id === id));
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    tabs.forEach(t=>t.addEventListener("click", ()=>openTab(t.dataset.tab)));
+
+    // Go features from quick card
+    document.getElementById("goFeatures").addEventListener("click", ()=>openTab("features"));
+
+    // Copy username
+    const toast = document.getElementById("toast");
+    const copyBtn = document.getElementById("copyBtn");
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.classList.remove("show"), 1500);
+    }
+
+    copyBtn.addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(USERNAME);
+        showToast("Скопировано: " + USERNAME);
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = USERNAME;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast("Скопировано: " + USERNAME);
+      }
+    });
+  </script>
+</body>
+</html>
